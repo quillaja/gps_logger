@@ -1,12 +1,9 @@
-class Logger {
+class MapView {
 
     /**
      * @param {string} mapID html ID tag for map element
      */
     constructor(mapID = "map") {
-        /** @type {GeolocationPosition[]} */
-        this.locations = [];
-
         this.map = L.map(mapID).setView([0, 0], 18);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -15,9 +12,6 @@ class Logger {
 
         this.currentLocationMarker = undefined;
         this.historyPath = undefined;
-
-        /** @type {number} */
-        this.watchHandle = undefined;
     }
 
     /**
@@ -72,6 +66,35 @@ class Logger {
         }
     }
 
+    reset() {
+        this.historyPath?.remove();
+        this.historyPath = undefined;
+        this.currentLocationMarker?.remove();
+        this.currentLocationMarker = undefined;
+    }
+}
+
+
+class Logger {
+
+    /**
+     * @param {string} mapID html ID tag for map element
+     */
+    constructor() {
+        /** @type {GeolocationPosition[]} */
+        this.locations = [];
+
+        /** @type {number} */
+        this.watchHandle = undefined;
+    }
+
+    /**
+     * @param {GeolocationPosition} position 
+     */
+    addPosition(position) {
+        this.locations.push(position);
+    }
+
     /**
      * @param {string} filename 
      */
@@ -110,10 +133,6 @@ class Logger {
     reset() {
         this.stopWatch();
         this.locations = [];
-        this.historyPath?.remove();
-        this.historyPath = undefined;
-        this.currentLocationMarker?.remove();
-        this.currentLocationMarker = undefined;
     }
 };
 
