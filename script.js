@@ -4,7 +4,12 @@ class MapView {
      * @param {string} mapID html ID tag for map element
      */
     constructor(mapID = "map") {
-        this.map = L.map(mapID).setView([0, 0], 18);
+        this._initialLoc = [0, 0];
+        this._initialZoom = 4;
+        this._flyZoom = 19;
+        this._locations = [];
+
+        this.map = L.map(mapID).setView(this._initialLoc, this._initialZoom);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -18,17 +23,19 @@ class MapView {
      * @param {GeolocationPosition} position 
      */
     addPosition(position) {
-        this.locations.push(position);
+        this._locations.push(position);
+        if (this._locations.length > 2)
+            this._locations = this._locations.slice(-2); // keep only most recent 2 here
         this._updatePath();
         this._updateCircle();
     }
 
     _updateCircle() {
 
-        if (this.locations.length < 1)
+        if (this._locations.length < 1)
             return;
 
-        const p = this.locations.at(-1);
+        const p = this._locations.at(-1);
         const latlon = [p.coords.latitude, p.coords.longitude];
         const radius = p.coords.accuracy;
 
@@ -43,16 +50,16 @@ class MapView {
             radius: radius
         }).addTo(this.map);
 
-        this.map.flyTo(latlon);
+        this.map.flyTo(latlon, this._flyZoom);
     }
 
     _updatePath() {
 
-        if (this.locations.length < 2)
+        if (this._locations.length < 2)
             return;
 
         if (this.historyPath === null) {
-            const coords = this.locations.map(p => [p.coords.latitude, p.coords.longitude]);
+            const coords = this._locations.map(p => [p.coords.latitude, p.coords.longitude]);
             this.historyPath = L.polyline(
                 coords, {
                 color: "#0af",
@@ -60,7 +67,7 @@ class MapView {
             }).addTo(this.map);
         }
         else {
-            const p = this.locations.at(-1);
+            const p = this._locations.at(-1);
             const latlon = [p.coords.latitude, p.coords.longitude];
             this.historyPath.addLatLng(latlon);
         }
