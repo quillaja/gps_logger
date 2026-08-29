@@ -81,6 +81,30 @@ class MapView {
     }
 }
 
+class Stat {
+    constructor() {
+        this.count = 0;
+        this.sum = 0;
+        this.min = Infinity;
+        this.max = -Infinity;
+    }
+
+    /** @returns {number} */
+    get avg() {
+        return this.sum / this.count;
+    }
+
+    /**
+     * @param {number} x 
+     */
+    update(x) {
+        this.count++;
+        this.sum += x;
+        this.min = Math.min(this.min, x);
+        this.max = Math.max(this.max, x);
+    }
+}
+
 
 class TableView {
     /**
