@@ -1,10 +1,13 @@
 class Logger {
 
-    constructor() {
+    /**
+     * @param {string} mapID html ID tag for map element
+     */
+    constructor(mapID = "map") {
         /** @type {GeolocationPosition[]} */
         this.locations = [];
 
-        this.map = L.map("map").setView([0, 0], 18);
+        this.map = L.map(mapID).setView([0, 0], 18);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
