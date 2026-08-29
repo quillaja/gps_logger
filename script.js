@@ -106,15 +106,78 @@ class Logger {
             this.watchHandle = undefined;
         }
     }
+
+    reset() {
+        this.stopWatch();
+        this.locations = [];
+        this.historyPath?.remove();
+        this.historyPath = undefined;
+        this.currentLocationMarker?.remove();
+        this.currentLocationMarker = undefined;
+    }
 };
 
-window.addEventListener("load", () => {
+class App {
 
-    const log = new Logger();
+    constructor() {
+        this.btnStart = document.getElementById("btnStart");
+        this.btnStop = document.getElementById("btnStop");
+        this.btnSave = document.getElementById("btnSave");
+        this.btnReset = document.getElementById("btnReset");
 
-    document.getElementById("btnStart").addEventListener("click", () => log.startWatch());
-    document.getElementById("btnStop").addEventListener("click", () => log.stopWatch());
-    document.getElementById("btnSave").addEventListener("click", () => log.saveLocations());
+        this.btnStart.addEventListener("click", () => this.start());
+        this.btnStop.addEventListener("click", () => this.stop());
+        this.btnSave.addEventListener("click", () => this.save());
+        this.btnReset.addEventListener("click", () => this.reset());
 
+        this.logger = new Logger();
+    }
+
+    /** @returns {string} a datetime based filename */
+    get logFilename() {
+        const datestring = (new Date()).toISOString().replaceAll(":", "-");
+        const filename = `log_${datestring}.json`;
+        return filename;
+    }
+
+    start() {
+        this.btnStart.disabled = true;
+        this.btnStop.disabled = false;
+        this.btnSave.disabled = true;
+        this.btnReset.disabled = true;
+
+        this.logger.startWatch();
+    }
+
+    stop() {
+        this.btnStart.disabled = false;
+        this.btnStop.disabled = true;
+        this.btnSave.disabled = false;
+        this.btnReset.disabled = false;
+
+        this.logger.stopWatch();
+    }
+
+    save() {
+        this.btnStart.disabled = false;
+        this.btnStop.disabled = true;
+        this.btnSave.disabled = true;
+        this.btnReset.disabled = false;
+
+        this.logger.saveLocations(this.logFilename);
+    }
+
+    reset() {
+        this.btnStart.disabled = false;
+        this.btnStop.disabled = true;
+        this.btnSave.disabled = true;
+        this.btnReset.disabled = true;
+
+        this.logger.reset();
+    }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    window.app = new App();
     console.log("started app");
 });
