@@ -82,6 +82,37 @@ class MapView {
 }
 
 
+class TableView {
+    /**
+     * 
+     * @param {string} tableID html element ID of position table
+     */
+    constructor(tableID = "table") {
+        /** @type {HTMLTableElement} */
+        this.table = document.getElementById(tableID);
+        this.tableBody = this.table.createTBody();
+        this.reset();
+    }
+
+    /**
+     * @param {GeolocationPosition} position 
+     */
+    addPosition(position) {
+        const digits = 6;
+        const row = this.tableBody.insertRow(0);
+        row.insertCell().append(new Date(position.timestamp).toLocaleTimeString());
+        row.insertCell().append(position.coords.longitude?.toFixed(digits));
+        row.insertCell().append(position.coords.latitude?.toFixed(digits));
+        row.insertCell().append(position.coords.altitude?.toFixed(digits));
+    }
+
+    reset() {
+        while (this.tableBody.rows.length != 0) {
+            this.tableBody.deleteRow(-1);
+        }
+    }
+}
+
 
 /**
  * @callback updateCallback
@@ -179,9 +210,11 @@ class App {
         this.btnSave.addEventListener("click", () => this.save());
         this.btnReset.addEventListener("click", () => this.reset());
 
-        this.mapView = new MapView();
+        this.mapView = new MapView("map");
+        this.tableView = new TableView("table");
         this.logger = new Logger();
         this.logger.addUpdateListener(position => this.mapView.addPosition(position));
+        this.logger.addUpdateListener(position => this.tableView.addPosition(position));
     }
 
     /** @returns {string} a datetime based filename */
@@ -225,6 +258,8 @@ class App {
         this.btnReset.disabled = true;
 
         this.logger.reset();
+        this.mapView.reset();
+        this.tableView.reset();
     }
 }
 
