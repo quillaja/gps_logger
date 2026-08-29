@@ -135,11 +135,11 @@ class StatView {
     _updateContent() {
         const digits = 6;
         this.container.innerHTML = `
-        <span>N=${this.x.count}</span><span>Min</span><span>Avg</span><span>Max</span>
-        <span>Lon</span><span>${this.x.min.toFixed(digits)}</span><span>${this.x.avg.toFixed(digits)}</span><span>${this.x.max.toFixed(digits)}</span>
-        <span>Lat</span><span>${this.y.min.toFixed(digits)}</span><span>${this.y.avg.toFixed(digits)}</span><span>${this.y.max.toFixed(digits)}</span>
-        <span>Alt</span><span>${this.z.min.toFixed(digits)}</span><span>${this.z.avg.toFixed(digits)}</span><span>${this.z.max.toFixed(digits)}</span>
-        <span>Acc</span><span>${this.a.min.toFixed(digits)}</span><span>${this.a.avg.toFixed(digits)}</span><span>${this.a.max.toFixed(digits)}</span>
+        <span>N=${this.x.count}</span><b>Min</b><b>Avg</b><b>Max</b>
+        <b>Lon</b><span>${this.x.min.toFixed(digits)}</span><span>${this.x.avg.toFixed(digits)}</span><span>${this.x.max.toFixed(digits)}</span>
+        <b>Lat</b><span>${this.y.min.toFixed(digits)}</span><span>${this.y.avg.toFixed(digits)}</span><span>${this.y.max.toFixed(digits)}</span>
+        <b>Alt</b><span>${this.z.min.toFixed(digits)}</span><span>${this.z.avg.toFixed(digits)}</span><span>${this.z.max.toFixed(digits)}</span>
+        <b>Acc</b><span>${this.a.min.toFixed(digits)}</span><span>${this.a.avg.toFixed(digits)}</span><span>${this.a.max.toFixed(digits)}</span>
         `;
     }
 }

@@ -10,7 +10,7 @@ body {
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 2fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
     align-items: stretch;
 }
 
@@ -33,6 +33,7 @@ body {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
     align-items: stretch;
+    gap: 0.25rem;
 
     padding: 0.2rem;
     background-color: #fff;
