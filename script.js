@@ -1,10 +1,10 @@
-class App {
+class Logger {
 
     constructor() {
         /** @type {GeolocationPosition[]} */
         this.locations = [];
 
-        this.map = L.map("map").setView([0, 0], 16);
+        this.map = L.map("map").setView([0, 0], 18);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -106,11 +106,11 @@ class App {
 
 window.addEventListener("load", () => {
 
-    const app = new App();
+    const log = new Logger();
 
-    document.getElementById("btnStart").addEventListener("click", () => app.startWatch());
-    document.getElementById("btnStop").addEventListener("click", () => app.stopWatch());
-    document.getElementById("btnSave").addEventListener("click", () => app.saveLocations());
+    document.getElementById("btnStart").addEventListener("click", () => log.startWatch());
+    document.getElementById("btnStop").addEventListener("click", () => log.stopWatch());
+    document.getElementById("btnSave").addEventListener("click", () => log.saveLocations());
 
     console.log("started app");
 });
