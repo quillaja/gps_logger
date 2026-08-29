@@ -91,7 +91,7 @@ class Stat {
 
     /** @returns {number} */
     get avg() {
-        return this.sum / this.count;
+        return this.sum / (this.count || 1); // meh
     }
 
     /**
@@ -102,6 +102,44 @@ class Stat {
         this.sum += x;
         this.min = Math.min(this.min, x);
         this.max = Math.max(this.max, x);
+    }
+}
+
+
+class StatView {
+    constructor(statID = "stats") {
+        this.container = document.getElementById(statID);
+        this.reset();
+    }
+
+    /**
+     * @param {GeolocationPosition} position 
+     */
+    addPosition(position) {
+        this.x.update(position.coords.longitude);
+        this.y.update(position.coords.latitude);
+        this.z.update(position.coords.altitude);
+        this.a.update(position.coords.accuracy);
+        this._updateContent();
+    }
+
+    reset() {
+        this.container.innerHTML = "";
+        this.x = new Stat();
+        this.y = new Stat();
+        this.z = new Stat();
+        this.a = new Stat();
+    }
+
+    _updateContent() {
+        const digits = 6;
+        this.container.innerHTML = `
+        <span>N=${this.x.count}</span><span>Min</span><span>Avg</span><span>Max</span>
+        <span>Lon</span><span>${this.x.min.toFixed(digits)}</span><span>${this.x.avg.toFixed(digits)}</span><span>${this.x.max.toFixed(digits)}</span>
+        <span>Lat</span><span>${this.y.min.toFixed(digits)}</span><span>${this.y.avg.toFixed(digits)}</span><span>${this.y.max.toFixed(digits)}</span>
+        <span>Alt</span><span>${this.z.min.toFixed(digits)}</span><span>${this.z.avg.toFixed(digits)}</span><span>${this.z.max.toFixed(digits)}</span>
+        <span>Acc</span><span>${this.a.min.toFixed(digits)}</span><span>${this.a.avg.toFixed(digits)}</span><span>${this.a.max.toFixed(digits)}</span>
+        `;
     }
 }
 
@@ -236,9 +274,11 @@ class App {
 
         this.mapView = new MapView("map");
         this.tableView = new TableView("table");
+        this.statView = new StatView("stats");
         this.logger = new Logger();
         this.logger.addUpdateListener(position => this.mapView.addPosition(position));
         this.logger.addUpdateListener(position => this.tableView.addPosition(position));
+        this.logger.addUpdateListener(position => this.statView.addPosition(position));
     }
 
     /** @returns {string} a datetime based filename */
@@ -284,6 +324,7 @@ class App {
         this.logger.reset();
         this.mapView.reset();
         this.tableView.reset();
+        this.statView.reset();
     }
 }
 

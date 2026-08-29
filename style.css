@@ -34,12 +34,20 @@ body {
     grid-template-rows: auto 1fr;
     align-items: stretch;
 
-    background-color: cadetblue;
+    padding: 0.2rem;
+    background-color: #fff;
     /*
     wtf this makes element respect parent 1fr? fuck css
     https://stackoverflow.com/questions/43311943/prevent-content-from-expanding-grid-items
     */
     min-height: 0;
+}
+
+#stats {
+    display: grid;
+    grid-template-columns: auto repeat(3, 1fr);
+    gap: 2px;
+    /* overflow: hidden; */
 }
 
 #table-container {
