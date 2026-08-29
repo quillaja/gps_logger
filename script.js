@@ -1,6 +1,7 @@
 class App {
 
     constructor() {
+        /** @type {GeolocationPosition[]} */
         this.locations = [];
 
         this.map = L.map("map").setView([0, 0], 16);
@@ -12,6 +13,7 @@ class App {
         this.currentLocationMarker = undefined;
         this.historyPath = undefined;
 
+        /** @type {number} */
         this.watchHandle = undefined;
     }
 
@@ -69,8 +71,9 @@ class App {
 
     saveLocations() {
         const json = JSON.stringify(this.locations);
-        var blob = new Blob([json], { type: "text/plain;charset=utf-8" });
-        saveAs(blob, "locations.json"); // FileSaver.js
+        const blob = new Blob([json], { type: "text/plain;charset=utf-8" });
+        const datestring = (new Date()).toISOString().replaceAll(":", "-");
+        saveAs(blob, `log_${datestring}.json`); // FileSaver.js
     }
 
     startWatch() {
