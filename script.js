@@ -73,7 +73,9 @@ class App {
         const json = JSON.stringify(this.locations);
         const blob = new Blob([json], { type: "text/plain;charset=utf-8" });
         const datestring = (new Date()).toISOString().replaceAll(":", "-");
-        saveAs(blob, `log_${datestring}.json`); // FileSaver.js
+        const filename = `log_${datestring}.json`;
+        localStorage.setItem(filename, json);
+        saveAs(blob, filename); // FileSaver.js
     }
 
     startWatch() {
