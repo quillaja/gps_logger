@@ -82,6 +82,15 @@ class MapView {
 }
 
 
+
+/**
+ * @callback updateCallback
+ * @param {GeolocationPosition} position 
+ */
+
+/**
+ * GPS log and save functionality.
+ */
 class Logger {
 
     /**
@@ -93,6 +102,17 @@ class Logger {
 
         /** @type {number|null} */
         this.watchHandle = null;
+
+        /** @type {updateCallback[]} */
+        this._updateListeners = [];
+    }
+
+    /**
+     * 
+     * @param {updateCallback} listener 
+     */
+    addUpdateListener(listener) {
+        this._updateListeners.push(listener);
     }
 
     /**
@@ -100,6 +120,9 @@ class Logger {
      */
     addPosition(position) {
         this.locations.push(position);
+        for (const listener of this._updateListeners) {
+            listener(position);
+        }
     }
 
     /**
@@ -156,7 +179,9 @@ class App {
         this.btnSave.addEventListener("click", () => this.save());
         this.btnReset.addEventListener("click", () => this.reset());
 
+        this.mapView = new MapView();
         this.logger = new Logger();
+        this.logger.addUpdateListener(position => this.mapView.addPosition(position));
     }
 
     /** @returns {string} a datetime based filename */
