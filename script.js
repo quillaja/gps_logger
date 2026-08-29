@@ -98,6 +98,7 @@ class Stat {
      * @param {number} x 
      */
     update(x) {
+        if (x === null || x === undefined) return;
         this.count++;
         this.sum += x;
         this.min = Math.min(this.min, x);
