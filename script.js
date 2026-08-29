@@ -10,8 +10,8 @@ class MapView {
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.map);
 
-        this.currentLocationMarker = undefined;
-        this.historyPath = undefined;
+        this.currentLocationMarker = null;
+        this.historyPath = null;
     }
 
     /**
@@ -51,7 +51,7 @@ class MapView {
         if (this.locations.length < 2)
             return;
 
-        if (this.historyPath === undefined) {
+        if (this.historyPath === null) {
             const coords = this.locations.map(p => [p.coords.latitude, p.coords.longitude]);
             this.historyPath = L.polyline(
                 coords, {
@@ -68,9 +68,9 @@ class MapView {
 
     reset() {
         this.historyPath?.remove();
-        this.historyPath = undefined;
+        this.historyPath = null;
         this.currentLocationMarker?.remove();
-        this.currentLocationMarker = undefined;
+        this.currentLocationMarker = null;
     }
 }
 
@@ -84,8 +84,8 @@ class Logger {
         /** @type {GeolocationPosition[]} */
         this.locations = [];
 
-        /** @type {number} */
-        this.watchHandle = undefined;
+        /** @type {number|null} */
+        this.watchHandle = null;
     }
 
     /**
@@ -123,10 +123,10 @@ class Logger {
     }
 
     stopWatch() {
-        if (this.watchHandle !== undefined) {
+        if (this.watchHandle !== null) {
             navigator.geolocation.clearWatch(this.watchHandle);
             console.log(`cleared watch ${this.watchHandle}`)
-            this.watchHandle = undefined;
+            this.watchHandle = null;
         }
     }
 
