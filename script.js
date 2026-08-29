@@ -50,7 +50,7 @@ class MapView {
             radius: radius
         }).addTo(this.map);
 
-        this.map.flyTo(latlon, this._flyZoom);
+        this.map.flyTo(latlon, this._flyZoom, { duration: 0.5 });
     }
 
     _updatePath() {
