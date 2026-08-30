@@ -28,6 +28,68 @@ function haversine(p1, p2) {
 }
 
 
+/** 
+@typedef {Object} GeoidAPIResponse
+@property {string} geoidModel  "GEOID12B",
+@property {string} station  "UserStation",
+@property {number} lat  40.0,
+@property {string} latDms  "N400000.00000",
+@property {number} lon  -80.0,
+@property {string} lonDms  "W0800000.00000",
+@property {number} geoidHeight  -33.185,
+@property {number} error  0.07
+*/
+
+class GeoidCache {
+
+    constructor() {
+        /** @type {GeolocationPosition} */
+        this.position = null;
+
+        /** @type {GeoidAPIResponse} */
+        this.geoid = null;
+    }
+
+    /**
+     * @param {GeolocationPosition} position 
+     * @returns {Promise<number|undefined>}
+     */
+    getGeoidHeight(position) {
+        if (this.geoid !== null && this.position !== null) {
+            const updateDistance = 100; // meters
+            const movedDistance = haversine(position, this.position);
+            console.log(`moved ${movedDistance}`);
+            if (movedDistance < updateDistance)
+                return Promise.resolve(this.geoid.geoidHeight);
+        }
+
+        const url = `https://geodesy.noaa.gov/api/geoid/ght?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
+        const bypassCORS = `https://corsproxy.io/?key=webdemo1&url=${encodeURIComponent(url)}`;
+        console.log(bypassCORS);
+        return fetch(bypassCORS)
+            .then(r => r.json())
+            .then(d => this.onSuccess(d, position))
+            .catch(this.onFailure);
+    }
+
+    /** 
+     * @param {GeoidAPIResponse} geoid 
+     * @param {GeolocationPosition} position
+    */
+    onSuccess(geoid, position) {
+        this.position = position;
+        this.geoid = geoid;
+        console.log(`update geoid: ${geoid.geoidHeight}`);
+        return geoid.geoidHeight;
+    }
+
+    onFailure(reason) {
+        console.error(reason);
+        return undefined;
+    }
+}
+
+
 class MapView {
 
     /**
