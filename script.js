@@ -1,3 +1,33 @@
+/**
+ * @param {number} deg 
+ * @returns {number} radians
+ */
+function radians(deg) { return deg * (Math.PI / 180); }
+
+/** 
+ * @param {GeolocationPosition} p1 
+ * @param {GeolocationPosition} p2
+*/
+function haversine(p1, p2) {
+
+    const avgEarthRadius = 6371.2 * 1000;// meters
+
+    const dLat = radians(p2.coords.latitude - p1.coords.latitude);
+    const dLon = radians(p2.coords.longitude - p1.coords.longitude);
+    const lat1 = radians(p1.coords.latitude);
+    const lat2 = radians(p2.coords.latitude);
+
+    const a = Math.pow(Math.sin(dLat / 2), 2)
+        + Math.cos(lat1)
+        * Math.cos(lat2)
+        * Math.pow(Math.sin(dLon / 2), 2);
+
+    const c = 2 * Math.asin(Math.sqrt(a));
+
+    return avgEarthRadius * c;
+}
+
+
 class MapView {
 
     /**
