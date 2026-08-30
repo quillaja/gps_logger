@@ -258,7 +258,11 @@ class TableView {
         row.insertCell().append(new Date(position.timestamp).toLocaleTimeString());
         row.insertCell().append(position.coords.longitude?.toFixed(digits));
         row.insertCell().append(position.coords.latitude?.toFixed(digits));
-        row.insertCell().append(position.coords.altitude?.toFixed(digits));
+        row.insertCell().append(position.coords.altitude?.toFixed(digits - 4));
+        const ellipsoid = position.coords.altitude;
+        const geoid = position.coords.geoidHeight;
+        const orthometric = ellipsoid === null ? null : ellipsoid - geoid;
+        row.insertCell().append(orthometric?.toFixed(digits - 4));
     }
 
     reset() {
