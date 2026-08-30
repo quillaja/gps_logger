@@ -280,9 +280,12 @@ class TableView {
 class Logger {
 
     /**
-     * @param {string} mapID html ID tag for map element
+     * @param {GeoidCache|null} geoidAPI thing that can get a geoid height for location 
      */
-    constructor() {
+    constructor(geoidAPI = null) {
+        /** @type {GeoidCache|null} */
+        this.geoidAPI = geoidAPI;
+
         /** @type {GeolocationPosition[]} */
         this.locations = [];
 
@@ -304,7 +307,9 @@ class Logger {
     /**
      * @param {GeolocationPosition} position 
      */
-    addPosition(position) {
+    async addPosition(position) {
+        const geoidHeight = await this.geoidAPI?.getGeoidHeight(position);
+        position.coords.geoidHeight = geoidHeight;
         this.locations.push(position);
         for (const listener of this._updateListeners) {
             listener(position);
@@ -368,7 +373,7 @@ class App {
         this.mapView = new MapView("map");
         this.tableView = new TableView("table");
         this.statView = new StatView("stats");
-        this.logger = new Logger();
+        this.logger = new Logger(new GeoidCache());
         this.logger.addUpdateListener(position => this.mapView.addPosition(position));
         this.logger.addUpdateListener(position => this.tableView.addPosition(position));
         this.logger.addUpdateListener(position => this.statView.addPosition(position));
