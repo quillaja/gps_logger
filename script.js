@@ -64,7 +64,7 @@ class GeoidCache {
         }
 
         const url = `https://geodesy.noaa.gov/api/geoid/ght?lat=${position.coords.latitude}&lon=${position.coords.longitude}`;
-        const bypassCORS = `https://corsproxy.io/?key=webdemo1&url=${encodeURIComponent(url)}`;
+        const bypassCORS = `https://corsproxy.io/?key=b71b0dbc&url=${encodeURIComponent(url)}`;
         console.log(bypassCORS);
         return fetch(bypassCORS)
             .then(r => r.json())
