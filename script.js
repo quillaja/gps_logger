@@ -324,10 +324,25 @@ class Logger {
      * @param {string} filename 
      */
     saveLocations(filename) {
-        const json = JSON.stringify(this.locations);
+        const json = JSON.stringify(this.locations.map(Logger._toObj));
         const blob = new Blob([json], { type: "text/plain;charset=utf-8" });
         localStorage.setItem(filename, json);
         saveAs(blob, filename); // FileSaver.js
+    }
+
+    /** @param {GeolocationPosition} position */
+    static _toObj(position) {
+        return {
+            timestamp: position.timestamp,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            altitude: position.coords.altitude,
+            accuracy: position.coords.accuracy,
+            altitudeAccuracy: position.coords.altitudeAccuracy,
+            heading: position.coords.heading,
+            speed: position.coords.speed,
+            geoidHeight: position.coords.geoidHeight,
+        };
     }
 
     startWatch() {
